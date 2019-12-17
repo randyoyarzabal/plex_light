@@ -56,10 +56,13 @@ def webhook():
         # If playing trailers/preroll or movies, adhere to the normal events.
         elif media_type == 'movie' and local and device == plex_player:
             if event == 'media.play' or event == 'media.resume':
+                print('Action play_movie invoked (lights off).')
                 decora_api.play_movie()  # Turn-off the lights
             if event == 'media.pause':
+                print('Action pause_movie invoked (dim lights).')
                 decora_api.pause_movie()  # Dim the lights
             if event == 'media.stop':
+                print('Action stop_movie invoked (lights on).')
                 decora_api.stop_movie()  # Turn-on the lights
         else:
             print('Post IGNORED: Device: {}, Local: {}, {}'.format(device, local, event))
