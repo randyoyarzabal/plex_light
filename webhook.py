@@ -65,9 +65,7 @@ def webhook():
             if event == 'media.stop':  # This code won't be reached by clips by design.
                 decora_api.stop_movie()
         else:
-            print('Post IGNORED: Device: {}, Local: {}, Media ({}): {} - {}'.format(device, local, media_type,
-                                                                                    media_title,
-                                                                                    event))
+            print('Post IGNORED: Device: {}, Local: {}, {}'.format(device, local, event))
         return '', 200
     else:
         abort(400)
