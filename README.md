@@ -12,11 +12,11 @@ line of light switches.  I am hoping that someone would contribute to support ot
 
 ### Stand-alone Installation
 
-* Define required environment variables (see samples in [start_hook.sh](start_hook.sh)) in a new `.env` file.
+* Define required environment variables by creating a copy of [.env_sample](.env_sample)) as a new `.env` file.
 * Install prerequisite packages from [requirements.txt](requirements.txt) using Python 3+:  
 `pip install -r requirements.txt`
 * Run the webhook app:  
-`./start_hook.sh`
+`python webhook.py`
 * Define webhook on your Plex account as: `http://<ip address>:5000/webhook`
 
 ### Docker Installation
