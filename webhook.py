@@ -34,36 +34,33 @@ def webhook():
         local = payload['Player']['local']
         device = payload['Player']['title']
         media_title = payload['Metadata']['title']
-        clip_type = ''
 
         # Determine media type for future handling of various types.
         if media_type == 'clip':
             if 'preroll' in payload['Metadata'].get('guid', ''):
-                clip_type = 'pre-roll'
+                media_type = 'pre-roll'
             elif 'trailer' in payload['Metadata'].get('subtype', ''):
-                clip_type = 'trailer'
+                media_type = 'trailer'
             else:
-                clip_type = 'unknown'
-            print('Clip ({}): {} - {}'.format(clip_type, media_title, event))
-        else:
-            print('Media ({}): {} - {}'.format(media_type, media_title, event))
+                media_type = 'unknown'
+
+        print('Media ({}): {} - {}'.format(media_type, media_title, event))
 
         # This prevents lights from turning off during transition from trailer/pre-roll to movie.
         # Note that this does have a known side-effect of the lights not turning on if trailers
-        # or pre-roll media is interrupted and stopped (which is uncommon).
-        # Normal events such as pause and play are unaffected.
-        if media_type == 'clip' and local and device == plex_player and event == 'media.stop':
+        # or pre-roll media is abruptly stopped (which is an uncommon action, but obviously possible).
+        # Normal trailer/pre-roll events such as pause and play are unaffected.
+        if media_type in ('trailer', 'pre-roll') and local and device == plex_player and event == 'media.stop':
             print('Action ignored as requested.')
-            pass
 
         # If playing trailers/preroll or movies, adhere to the normal events.
-        elif (media_type == 'clip' or media_type == 'movie') and local and device == plex_player:
+        elif media_type == 'movie' and local and device == plex_player:
             if event == 'media.play' or event == 'media.resume':
-                decora_api.play_movie()
+                decora_api.play_movie()  # Turn-off the lights
             if event == 'media.pause':
-                decora_api.pause_movie()
-            if event == 'media.stop':  # This code won't be reached by clips by design.
-                decora_api.stop_movie()
+                decora_api.pause_movie()  # Dim the lights
+            if event == 'media.stop':
+                decora_api.stop_movie()  # Turn-on the lights
         else:
             print('Post IGNORED: Device: {}, Local: {}, {}'.format(device, local, event))
         return '', 200
