@@ -2,16 +2,14 @@
 A webhook application for automatically controlling home theater lighting upon movie start, stop, 
 and pause in [Plex Media Center](http://plex.tv).  
 
-## Instructions
-
-### Notes
+## Installation
 
 ***Please note that while the "master" branch is a working version, documentation and code clean-up is in-progress.***
 
 This currently only supports [Leviton Decora](http://www.leviton.com/en/products/lighting-controls/decora-smart-with-wifi) 
 line of light switches.  I am hoping that someone would contribute to support other light switches as well.
 
-### Stand-alone installation
+### Stand-alone Installation
 
 * Define required environment variables (see samples in [start_hook.sh](start_hook.sh)) in a new `.env` file.
 * Install prerequisite packages from [requirements.txt](requirements.txt) using Python 3+:  
@@ -20,7 +18,7 @@ line of light switches.  I am hoping that someone would contribute to support ot
 `./start_hook.sh`
 * Define webhook on your Plex account as: `http://<ip address>:5000/webhook`
 
-### Docker installation
+### Docker Installation
 TBD
 
 ## Credits
