@@ -1,4 +1,4 @@
-# Automated Plex Lighting Control
+# Automated Plex Lighting Control (plex-light_switch v0.1)
 A webhook application for automatically controlling home theater lighting upon movie start, stop, 
 and pause in [Plex Media Center](http://plex.tv).  
 

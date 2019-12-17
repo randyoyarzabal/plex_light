@@ -5,6 +5,7 @@ import os
 from flask import Flask, request, abort
 from plex import DecoraPlexHook
 
+VERSION = 'v0.1'
 plex_player = os.environ.get('PLEX_PLAYER')
 
 app = Flask(__name__)
@@ -63,4 +64,5 @@ if __name__ == '__main__':
     # CAUTION: Any IP can access your webhook server!  You may want to add your own OS firewall
     #    rule to restrict access only to the Plex Media Player box.
     # For a simple webhook running internally, with the dev server is fine.
+    print('plex-light_switch {}'.format(VERSION))
     app.run(debug=True, host='0.0.0.0')
