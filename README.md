@@ -3,14 +3,14 @@ A webhook application for automatically controlling home theater lighting upon m
 
 ## Instructions
 
-###Notes
+### Notes
 This currently only supports Leviton Decora line of light switches.  I am hoping that someone would contribute to
 support other light switches as well.
 
-###Stand-alone installation
+### Stand-alone installation
 TBD
 
-###Docker installation
+### Docker installation
 TBD
 
 ## Credits
