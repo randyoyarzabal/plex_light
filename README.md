@@ -4,7 +4,8 @@ and pause in [Plex Media Center](http://plex.tv).
 
 ## Installation
 
-***Please note that while the "master" branch is a working version, documentation and code clean-up is in-progress.***
+***Please note that while the "master" branch is a working version tested with Python 3.7 on CentOS and MacOS, 
+documentation and code clean-up is in-progress.***
 
 This currently only supports [Leviton Decora](http://www.leviton.com/en/products/lighting-controls/decora-smart-with-wifi) 
 line of light switches.  I am hoping that someone would contribute to support other light switches as well.
