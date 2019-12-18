@@ -29,7 +29,8 @@ PLEX_PLAY_ACTIVITY='Plex Movie Play'
 PLEX_PAUSE_ACTIVITY='Plex Movie Pause'
 PLEX_STOP_ACTIVITY='Plex Movie Stop'
 ```
-Or, if you'd rather send "brightness" values, define as follows:
+Or, if you'd rather send "brightness" values, define as follows:  
+*Note: These values will be ignored if any activity variables are defined.*
 ```
 PLEX_CLIP_BRIGHTNESS=20
 PLEX_END_BRIGHTNESS=10

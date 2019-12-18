@@ -23,7 +23,7 @@ def webhook():
     # This object instantiates a Leviton Decora dimmer/switch control.
     # If you want to control other lights, you'll have to implement/use a different concrete
     # subclass of the PlexHook abstract class and change here.
-    decora_api = DecoraPlexHook(activity=True)
+    decora_api = DecoraPlexHook()
 
     if request.method == 'POST':
         plex_player = os.environ.get('PLEX_PLAYER')

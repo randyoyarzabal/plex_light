@@ -6,13 +6,16 @@ from .PlexHook import PlexHook
 
 class DecoraPlexHook(PlexHook):
 
-    def __init__(self, activity=False):
+    def __init__(self):
         super().__init__()
-        self.activity = activity
+        self.activity = False
         self.switch = os.environ.get('DECORA_SWITCH')
         self.decora_api = LevitonDecora(decora_email=os.environ.get('DECORA_USER'),
                                         decora_pass=os.environ.get('DECORA_PASS'),
                                         decora_residence=os.environ.get('DECORA_RESIDENCE'))
+        # Check if an activity is defined
+        if os.environ.get('PLEX_CLIP_ACTIVITY', None):
+            self.activity = True
 
     def run_activity(self, activity, brightness=0):
         if self.activity:
