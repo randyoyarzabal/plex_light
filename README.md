@@ -22,6 +22,7 @@ pre-rolls are defined in Plex Settings (Extras). That is, if trailers are define
 *But why, you might ask?* It is because Plex decided to send a "media.play" event ONLY when playback is invoked right 
 before the trailers and pre-roll. It is therefore impossible to detect when a movie is about to start, unless you have 
 a pre-roll, then this app will detect the end of that, and therefore turn off the lights before the movie starts.  
+
 Long story short, leave `ADVANCED_CONTROL` setting to `false` if you don't have pre-rolls enabled.
 
 ## Installation
