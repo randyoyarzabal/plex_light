@@ -62,9 +62,9 @@ def webhook():
                 decora_api.play_action()  # Turn-off the lights
             elif event == 'media.stop':
                 # This delay is to prevent stop_action() from invoking in between trailers/pre-roll
-                os.environ['PENDING_STOP'] = 'TRUE'
+                os.environ['PENDING_STOP'] = 'True'
                 time.sleep(action_delay)
-                if os.environ.get('PENDING_STOP', '') == 'TRUE':
+                if os.environ.get('PENDING_STOP', '') == 'True':
                     os.environ['PENDING_STOP'] = ''
                     log_action('Action stop_action() invoked (lights on).')
                     decora_api.stop_action()  # Turn-on the lights
@@ -83,9 +83,9 @@ def webhook():
                     decora_api.clip_action()  # Dim the lights
 
                     # This delay prevents the play_action() if followed by trailers/pre-roll
-                    os.environ['PENDING_PLAY'] = 'TRUE'
+                    os.environ['PENDING_PLAY'] = 'True'
                     time.sleep(action_delay)
-                    if os.environ.get('PENDING_PLAY', '') == 'TRUE':
+                    if os.environ.get('PENDING_PLAY', '') == 'True':
                         os.environ['PENDING_PLAY'] = ''
                         log_action('Action play_action() invoked (lights off).')
                         decora_api.play_action()  # Turn-off the lights

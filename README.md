@@ -12,7 +12,7 @@ a subclass to [PlexHook.py](plex/PlexHook.py).
 ## Usage
 Getting started is very simple. Define these configuration values below (examples) in a `.env` file, follow the 
 installation instructions, run the app, then define the full URL as webhook in Plex. Enjoy!
-```bash
+```
 # Note that the DECORA* values below are from your My Leviton App
 DECORA_USER='email'
 DECORA_PASS='password'
@@ -22,7 +22,7 @@ PLEX_PLAYER='SHIELD Android TV'
 PLEX_ACTION_DELAY=2
 ```
 You can define "Activities" in your My Leviton App, then define as follows:
-```bash
+```
 PLEX_CLIP_ACTIVITY='Plex Clip Play'
 PLEX_END_ACTIVITY='Plex End Play'
 PLEX_PLAY_ACTIVITY='Plex Movie Play'
@@ -30,7 +30,7 @@ PLEX_PAUSE_ACTIVITY='Plex Movie Pause'
 PLEX_STOP_ACTIVITY='Plex Movie Stop'
 ```
 Or, if you'd rather send "brightness" values, define as follows:
-```bash
+```
 PLEX_CLIP_BRIGHTNESS=20
 PLEX_END_BRIGHTNESS=10
 PLEX_PLAY_BRIGHTNESS=0
