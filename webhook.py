@@ -96,6 +96,11 @@ def webhook():
             if event == 'media.pause':
                 print('Action pause_movie invoked (dim lights).')
                 decora_api.pause_movie()  # Dim the lights
+
+            if event == 'media.scrobble':
+                print('Action pause_movie invoked (dim lights).')
+                decora_api.pause_movie()  # Dim the lights
+
             # if event == 'media.stop':
             #     print('Action stop_movie invoked (lights on).')
             #     decora_api.stop_movie()  # Turn-on the lights
