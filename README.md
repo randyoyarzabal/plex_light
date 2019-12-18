@@ -12,7 +12,7 @@ a subclass to [PlexHook.py](plex/PlexHook.py).
 ## Quick Start
 - Define a configuration file (simply make copy of [.env_sample](.env_sample) as a new `.env` file.
 - Configure the variables in `.env` as appropriate for your use.
-- Follow the installation instructions
+- Follow the installation instructions below.
 - Run the app: `python webhook.py` 
 - Define the full URL as webhook in the Plex configuration. Enjoy!
 
