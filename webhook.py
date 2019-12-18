@@ -8,8 +8,6 @@ from plex import DecoraPlexHook
 from datetime import datetime
 
 VERSION = 'v0.2'
-plex_player = os.environ.get('PLEX_PLAYER')
-action_delay = int(os.environ.get('PLEX_ACTION_DELAY'))
 
 app = Flask(__name__)
 
@@ -28,6 +26,9 @@ def webhook():
     decora_api = DecoraPlexHook(activity=True)
 
     if request.method == 'POST':
+        plex_player = os.environ.get('PLEX_PLAYER')
+        action_delay = int(os.environ.get('PLEX_ACTION_DELAY'))
+
         # Get the payload from Plex's post.
         plex_dict = request.form.to_dict()
         payload = plex_dict['payload']
