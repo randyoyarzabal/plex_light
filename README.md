@@ -17,12 +17,12 @@ a subclass to [PlexHook.py](plex/PlexHook.py).
 - Define the full URL as webhook in the Plex configuration. Enjoy!
 
 ***Caution:*** if you intend this app to control lights based on trailer/pre-roll events, you need to make sure that 
-pre-roll is defined.  That is, if trailers are defined, and you intend to have dim lighting (for example) for trailers
-and lights-off for the movie, then you are required to have pre-rolls enabled in Plex. But why, you might ask?  It is
-because Plex decided to send a "media.play" event ONLY when playback is invoked right before the trailers and pre-roll.
-It is therefore impossible to detect when a movie is about to start, unless you have a pre-roll, then this app will
-detect the end of that, and therefore turn off the lights before the movie starts.  Long story short, set the 
-`ADVANCED_CONTROL=false` if you don't have pre-rolls enabled.
+pre-rolls are defined in Plex Settings (Extras). That is, if trailers are defined, and you intend to have dim lighting 
+(for example) for trailers and lights-off for the movie, then you are required to have pre-rolls enabled in Plex. 
+*But why, you might ask?* It is because Plex decided to send a "media.play" event ONLY when playback is invoked right 
+before the trailers and pre-roll. It is therefore impossible to detect when a movie is about to start, unless you have 
+a pre-roll, then this app will detect the end of that, and therefore turn off the lights before the movie starts.  
+Long story short, leave `ADVANCED_CONTROL` setting to `false` if you don't have pre-rolls enabled.
 
 ## Installation
 
