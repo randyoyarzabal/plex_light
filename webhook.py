@@ -62,7 +62,7 @@ def webhook():
         elif event == 'media.stop' and local and device == plex_player:
             print('Action pending stop()')
             os.environ['PENDING_STOP'] = 'TRUE'
-            time.sleep(2)
+            time.sleep(3)
             if os.environ.get('PENDING_STOP', '') == 'TRUE':
                 print('Action stop_movie invoked (lights on).')
                 decora_api.stop_movie()  # Turn-on the lights
@@ -87,7 +87,7 @@ def webhook():
                 decora_api.pause_movie()  # Dim the lights
 
                 os.environ['PENDING_PLAY'] = 'TRUE'
-                time.sleep(2)
+                time.sleep(3)
                 if os.environ.get('PENDING_PLAY', '') == 'TRUE':
                     os.environ['PENDING_PLAY'] = ''
                     print('Action play_movie invoked (lights off).')
