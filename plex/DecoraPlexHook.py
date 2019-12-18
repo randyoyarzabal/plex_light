@@ -8,14 +8,24 @@ class DecoraPlexHook(PlexHook):
 
     def __init__(self):
         super().__init__()
+        activities = (
+            'PLEX_CLIP_ACTIVITY',
+            'PLEX_END_ACTIVITY',
+            'PLEX_PLAY_ACTIVITY',
+            'PLEX_PAUSE_ACTIVITY',
+            'PLEX_STOP_ACTIVITY'
+        )
         self.activity = False
         self.switch = os.environ.get('DECORA_SWITCH')
         self.decora_api = LevitonDecora(decora_email=os.environ.get('DECORA_USER'),
                                         decora_pass=os.environ.get('DECORA_PASS'),
                                         decora_residence=os.environ.get('DECORA_RESIDENCE'))
-        # Check if an activity is defined
-        if os.environ.get('PLEX_CLIP_ACTIVITY', None):
-            self.activity = True
+
+        # Check if any activity variable is defined
+        for activity in activities:
+            if os.environ.get(activity, None):
+                self.activity = True
+                break
 
     def run_activity(self, activity, brightness=0):
         if self.activity:
