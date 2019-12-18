@@ -5,15 +5,19 @@ import os
 import time
 from flask import Flask, request, abort
 from plex import DecoraPlexHook
+from datetime import datetime
 
-VERSION = 'v0.1'
+VERSION = 'v0.2'
 plex_player = os.environ.get('PLEX_PLAYER')
+action_delay = int(os.environ.get('PLEX_ACTION_DELAY'))
 
 app = Flask(__name__)
 
 
-def log_action(*items):
-    print(','.join(items))
+def log_action(log_str):
+    dt_obj = datetime.now()
+    timestamp = dt_obj.strftime("%d-%b-%Y (%H:%M:%S)")
+    print('{} - {}'.format(timestamp, log_str))
 
 
 @app.route('/webhook', methods=['POST'])
@@ -45,67 +49,57 @@ def webhook():
             else:
                 media_type = 'unknown'
 
-        print('Media ({}): {} - {}'.format(media_type, media_title, event))
+        log_action('Media ({}): {} - {}'.format(media_type, media_title, event))
 
         # if event == 'media.stop':
         #     print(json.dumps(payload, indent=4, sort_keys=True))
 
-        # This prevents lights from turning off during transition from trailer/pre-roll to movie.
-        # Note that this does have a known side-effect of the lights not turning on if trailers
-        # or pre-roll media is abruptly stopped (which is an uncommon action, but obviously possible).
-        # Normal trailer/pre-roll events such as pause and play are unaffected.
-
-        if media_type == 'pre-roll' and local and device == plex_player and event == 'media.stop':
-            print('Action play_movie (pre-roll done) invoked (lights off).')
-            decora_api.play_movie()  # Turn-off the lights
-            # print('Action ignored as requested.')
-        elif event == 'media.stop' and local and device == plex_player:
-            print('Action pending stop()')
-            os.environ['PENDING_STOP'] = 'TRUE'
-            time.sleep(2)
-            if os.environ.get('PENDING_STOP', '') == 'TRUE':
-                print('Action stop_movie invoked (lights on).')
-                decora_api.stop_movie()  # Turn-on the lights
-                os.environ['PENDING_STOP'] = ''
-
-        # elif media_type in ('trailer', 'pre-roll') and local and device == plex_player and event == 'media.stop':
-        #     print('Action ignored as requested.')
-
-
-        # If playing trailers/preroll or movies, adhere to the normal events.
-        elif media_type in ('trailer', 'pre-roll') and local and device == plex_player:
-            if event == 'media.play' or event == 'media.resume' or event == 'media.pause':
-                os.environ['PENDING_STOP'] = ''
-                os.environ['PENDING_PLAY'] = ''
-                print('Action pause_movie invoked (dim lights).')
-                decora_api.pause_movie()  # Dim the lights
-        elif media_type in ('movie', 'episode') and local and device == plex_player:
-            if event == 'media.play' or event == 'media.resume':
-                os.environ['PENDING_STOP'] = ''
-
-                # Dim the lights at the same level as trailers
-                decora_api.pause_movie()  # Dim the lights
-
-                os.environ['PENDING_PLAY'] = 'TRUE'
-                time.sleep(3)
-                if os.environ.get('PENDING_PLAY', '') == 'TRUE':
+        # Only perform actions for a particular player playing on the local network.
+        if local and device == plex_player:
+            if media_type == 'pre-roll' and event == 'media.stop':
+                log_action('Action play_action (pre-roll done) invoked (lights off).')
+                decora_api.play_action()  # Turn-off the lights
+            elif event == 'media.stop':
+                # This delay is to prevent stop_action() from invoking in between trailers/pre-roll
+                os.environ['PENDING_STOP'] = 'TRUE'
+                time.sleep(action_delay)
+                if os.environ.get('PENDING_STOP', '') == 'TRUE':
+                    os.environ['PENDING_STOP'] = ''
+                    log_action('Action stop_action() invoked (lights on).')
+                    decora_api.stop_action()  # Turn-on the lights
+            # If playing trailers/preroll only invoke one action clip_action()
+            elif media_type in ('trailer', 'pre-roll'):
+                if event == 'media.play' or event == 'media.resume' or event == 'media.pause':
+                    os.environ['PENDING_STOP'] = ''
                     os.environ['PENDING_PLAY'] = ''
-                    print('Action play_movie invoked (lights off).')
-                    decora_api.play_movie()  # Turn-off the lights
+                    log_action('Action clip_action() invoked (dim lights).')
+                    decora_api.clip_action()  # Dim the lights
+            elif media_type in ('movie', 'episode'):
+                if event == 'media.play' or event == 'media.resume':
+                    os.environ['PENDING_STOP'] = ''
 
-            if event == 'media.pause':
-                print('Action pause_movie invoked (dim lights).')
-                decora_api.pause_movie()  # Dim the lights
+                    # Dim the lights at the same level as trailers
+                    decora_api.clip_action()  # Dim the lights
 
-            if event == 'media.scrobble':
-                print('Action pause_movie invoked (dim lights).')
-                decora_api.pause_movie()  # Dim the lights
+                    # This delay prevents the play_action() if followed by trailers/pre-roll
+                    os.environ['PENDING_PLAY'] = 'TRUE'
+                    time.sleep(action_delay)
+                    if os.environ.get('PENDING_PLAY', '') == 'TRUE':
+                        os.environ['PENDING_PLAY'] = ''
+                        log_action('Action play_action() invoked (lights off).')
+                        decora_api.play_action()  # Turn-off the lights
 
-            # if event == 'media.stop':
-            #     print('Action stop_movie invoked (lights on).')
-            #     decora_api.stop_movie()  # Turn-on the lights
+                if event == 'media.pause':
+                    log_action('Action pause_action() invoked (dim lights).')
+                    decora_api.pause_action()  # Dim the lights
+
+                # This event is for when 90% of the movie is reached.
+                if event == 'media.scrobble':
+                    log_action('Action end_action() invoked (dim lights).')
+                    decora_api.end_action()  # Dim the lights
+
         else:
-            print('Post IGNORED: Device: {}, Local: {}, {}'.format(device, local, event))
+            log_action('Post IGNORED: Device: {}, Local: {}, {}'.format(device, local, event))
         return '', 200
     else:
         abort(400)
