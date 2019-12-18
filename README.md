@@ -4,7 +4,7 @@ and pause in [Plex Media Center](http://plex.tv).
 
 ## Features
 - Standard detection and actions for play, pause, stop of movies and TV shows.
-- Advanced detection and actions for trailers, pre-roll clips and ending (90%) of a movie.
+- Advanced detection and actions for clips (trailers or pre-roll) and ending (90%) of a movie.
 - Only implemented support for [Leviton Decora](http://www.leviton.com/en/products/lighting-controls/decora-smart-with-wifi) 
 line of light switches, but feel free to request a pull to contribute code for other dimmer switches by implementing
 a subclass to [PlexHook.py](plex/PlexHook.py).
@@ -13,29 +13,29 @@ a subclass to [PlexHook.py](plex/PlexHook.py).
 Getting started is very simple. Define these configuration values below (examples) in a `.env` file, follow the 
 installation instructions, run the app, then define the full URL as webhook in Plex. Enjoy!
 ```bash
-# Note that the DECORA* values below are from your MyLeviton App
-export DECORA_USER='email'
-export DECORA_PASS='password'
-export DECORA_RESIDENCE='Your House'
-export DECORA_SWITCH='Your Switch'
-export PLEX_PLAYER='SHIELD Android TV'
-export PLEX_ACTION_DELAY=2
+# Note that the DECORA* values below are from your My Leviton App
+DECORA_USER='email'
+DECORA_PASS='password'
+DECORA_RESIDENCE='Your House'
+DECORA_SWITCH='Your Switch'
+PLEX_PLAYER='SHIELD Android TV'
+PLEX_ACTION_DELAY=2
 ```
-You can define "Activities" in your MyLeviton App, then define as follows:
+You can define "Activities" in your My Leviton App, then define as follows:
 ```bash
-export PLEX_CLIP_ACTIVITY='Plex Clip Play'
-export PLEX_END_ACTIVITY='Plex End Play'
-export PLEX_PLAY_ACTIVITY='Plex Movie Play'
-export PLEX_PAUSE_ACTIVITY='Plex Movie Pause'
-export PLEX_STOP_ACTIVITY='Plex Movie Stop'
+PLEX_CLIP_ACTIVITY='Plex Clip Play'
+PLEX_END_ACTIVITY='Plex End Play'
+PLEX_PLAY_ACTIVITY='Plex Movie Play'
+PLEX_PAUSE_ACTIVITY='Plex Movie Pause'
+PLEX_STOP_ACTIVITY='Plex Movie Stop'
 ```
 Or, if you'd rather send "brightness" values, define as follows:
 ```bash
-export PLEX_CLIP_BRIGHTNESS=20
-export PLEX_END_BRIGHTNESS=10
-export PLEX_PLAY_BRIGHTNESS=0
-export PLEX_PAUSE_BRIGHTNESS=35
-export PLEX_STOP_BRIGHTNESS=100
+PLEX_CLIP_BRIGHTNESS=20
+PLEX_END_BRIGHTNESS=10
+PLEX_PLAY_BRIGHTNESS=0
+PLEX_PAUSE_BRIGHTNESS=35
+PLEX_STOP_BRIGHTNESS=100
 ```
 
 ## Installation
