@@ -76,13 +76,23 @@ def webhook():
         elif media_type in ('trailer', 'pre-roll') and local and device == plex_player:
             if event == 'media.play' or event == 'media.resume' or event == 'media.pause':
                 os.environ['PENDING_STOP'] = ''
+                os.environ['PENDING_PLAY'] = ''
                 print('Action pause_movie invoked (dim lights).')
                 decora_api.pause_movie()  # Dim the lights
         elif media_type == 'movie' and local and device == plex_player:
             if event == 'media.play' or event == 'media.resume':
                 os.environ['PENDING_STOP'] = ''
-                print('Action play_movie invoked (lights off).')
-                decora_api.play_movie()  # Turn-off the lights
+
+                # Dim the lights at the same level as trailers
+                decora_api.pause_movie()  # Dim the lights
+
+                os.environ['PENDING_PLAY'] = 'TRUE'
+                time.sleep(2)
+                if os.environ.get('PENDING_PLAY', '') == 'TRUE':
+                    os.environ['PENDING_PLAY'] = ''
+                    print('Action play_movie invoked (lights off).')
+                    decora_api.play_movie()  # Turn-off the lights
+
             if event == 'media.pause':
                 print('Action pause_movie invoked (dim lights).')
                 decora_api.pause_movie()  # Dim the lights
