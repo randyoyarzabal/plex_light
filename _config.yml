@@ -1,1 +1,11 @@
+title: plex_light
+description: Automatically control your home theater lighting with Plex!
+author: Randy E. Oyarzabal
+author_email: github@rbpsiu.com
+url: https://plex_light.rbpsiu.com/
 theme: jekyll-theme-dinky
+show_downloads: false
+toc: true
+overflow-x: scroll
+categories: [automation, iot, leviton, decora, plex, webhook, python, rbpsiu]
+tags: [automation, python, plex, leviton, decora, webhook, rbpsiu]
