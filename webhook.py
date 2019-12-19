@@ -72,8 +72,14 @@ def webhook():
                     decora_api.end_action()  # Dim the lights
 
                 if event == 'media.stop':
-                    log_action('Action stop_action() invoked (lights on).')
-                    decora_api.stop_action()  # Turn-on the lights
+                    # This delay is to prevent stop_action() from invoking in between trailers/pre-roll
+                    os.environ['PENDING_STOP'] = 'True'
+                    log_action('Stop delay activated for {} secs.'.format(stop_action_delay))
+                    time.sleep(stop_action_delay)
+                    if os.environ.get('PENDING_STOP', '') == 'True':
+                        os.environ['PENDING_STOP'] = ''
+                        log_action('Action stop_action() invoked (lights on).')
+                        decora_api.stop_action()  # Turn-on the lights
             # Advanced event detection (trailers AND pre-roll enabled)
             else:
                 # This is an artificial detection of movie start since Plex doesn't send a new 'media.play' event
