@@ -59,6 +59,8 @@ def webhook():
             # Basic Plex event detection (no trailers/pre-roll)
             if advanced_control == 'FALSE':
                 if event == 'media.play' or event == 'media.resume':
+                    os.environ['PENDING_STOP'] = ''
+
                     log_action('Action play_action() invoked (lights off).')
                     decora_api.play_action()  # Turn-off the lights
 
