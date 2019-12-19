@@ -43,6 +43,9 @@ documentation and code clean-up is in-progress.***
 TBD
 
 ### Known Issues/Solutions
+There are no known issues in Basic mode and where no trailers/pre-roll are enabled in Plex.
+However, in Advanced mode, there are some issues due to Plex's limitation on playback events when trailers/pre-roll 
+are involved:
 
 > Issue #1: Lights turn on when movie starts.   
 > Solution: Make sure pre-roll videos are enabled if trailers are enabled. 
