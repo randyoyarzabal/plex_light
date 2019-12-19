@@ -1,3 +1,5 @@
+[![GitHub release](https://img.shields.io/badge/Download-Release%20v0.3-lightgrey.svg?style=social)](https://github.com/randyoyarzabal/plex_light/releases/latest) [![GitHub commits (since latest release)](https://img.shields.io/github/commits-since/randyoyarzabal/plex_light/latest.svg?style=social)](https://github.com/randyoyarzabal/plex_light/commits/master)
+
 # Automated Plex Lighting Control (v0.3)
 A webhook application for for [Plex Media Center](http://plex.tv) to automatically control home theater lighting 
 (i.e. Leviton Decora) triggered by media (movies, episodes, trailer/pre-roll) events, such as play, pause, 
