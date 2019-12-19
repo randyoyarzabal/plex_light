@@ -29,7 +29,7 @@ def webhook():
         plex_player = os.environ.get('PLEX_PLAYER')
         stop_action_delay = int(os.environ.get('PLEX_STOP_ACTION_DELAY'))
         play_action_delay = int(os.environ.get('PLEX_PLAY_ACTION_DELAY'))
-        advanced_control = os.environ.get('ADVANCED_CONTROL').upper()
+        control_mode = os.environ.get('CONTROL_MODE').upper()
 
         # Get the payload from Plex's post.
         plex_dict = request.form.to_dict()
@@ -57,7 +57,10 @@ def webhook():
         # Only perform actions for a particular player playing on the local network.
         if local and device == plex_player:
             # Basic Plex event detection (no trailers/pre-roll)
-            if advanced_control == 'FALSE':
+            if control_mode == 'BASIC':
+                if media_type in ('trailer', 'pre-roll'):
+                    log_action('WARNING: Trailers and/or pre-roll clips detected. This is NOT supported in Basic mode.')
+
                 if event == 'media.play' or event == 'media.resume':
                     log_action('Action play_action() invoked (lights off).')
                     decora_api.play_action()  # Turn-off the lights
