@@ -24,7 +24,8 @@ pre-rolls are defined in Plex Settings (Extras). That is, if trailers are define
 before the trailers and pre-roll. It is therefore impossible to detect when a movie is about to start, unless you have 
 a pre-roll, then this app will detect the end of that, and therefore turn off the lights before the movie starts.  
 
-Long story short, leave `CONTROL_MODE` setting to `Basic` if you don't have trailers and pre-rolls enabled.
+Long story short, if you have trailer/pre-roll enabled, `CONTROL_MODE` should be set to `Advanced`, otherwise leave 
+as `Basic` if you don't.
 
 ## Installation
 
@@ -52,11 +53,11 @@ are involved:
 > Solution: Make sure pre-roll videos are enabled if trailers are enabled. 
 
 > Issue #2: There's a long delay in some/all the actions.
-> Solution: Be sure to set CONTROL_MODE='Basic' when trailers/pre-roll are disabled or the stop/play delays will be
+> Solution: Be sure to set `CONTROL_MODE='Basic'` when trailers/pre-roll are disabled or the stop/play delays will be
 > in effect.
 
 > Issue #2: Lights turn on and off in between trailers.   
-> Solution: Be sure you have CONTROL_MODE='Advanced' and pre-roll enabled in Plex.  This could also be a timing issue
+> Solution: Be sure you have `CONTROL_MODE='Advanced'` and pre-roll enabled in Plex.  This could also be a timing issue
 on how fast trailers load making the app think you stopped/skipped the trailer. If it bothers you, tweak the 
 `PLEX_STOP_ACTION_DELAY` setting to about 2-5.
 
