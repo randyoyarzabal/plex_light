@@ -4,7 +4,7 @@ author: Randy E. Oyarzabal
 author_email: github@rbpsiu.com
 url: https://plex_light.rbpsiu.com/
 theme: jekyll-theme-dinky
-show_downloads: false
+show_downloads: true
 toc: true
 overflow-x: scroll
 categories: [automation, iot, leviton, decora, plex, webhook, python, rbpsiu]
