@@ -1,6 +1,7 @@
-# Automated Plex Lighting Control (plex-light_switch v0.3)
-A webhook application for automatically controlling home theater lighting upon movie (also supports trailer/pre-roll 
-detection) start, stop, and pause in [Plex Media Center](http://plex.tv).  
+# Automated Plex Lighting Control (v0.3)
+A webhook application for for [Plex Media Center](http://plex.tv) to automatically control home theater lighting 
+(i.e. Leviton Decora) triggered by media (movies, episodes, trailer/pre-roll) events, such as play, pause, 
+stop and even media endings.
 
 ## Features
 - Standard detection and actions for play, pause, stop of movies and TV shows.
