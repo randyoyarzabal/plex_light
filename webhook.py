@@ -58,9 +58,6 @@ def webhook():
         if local and device == plex_player:
             # Basic Plex event detection (no trailers/pre-roll)
             if control_mode == 'BASIC':
-                if media_type in ('trailer', 'pre-roll'):
-                    log_action('WARNING: Trailers and/or pre-roll clips detected. This is NOT supported in Basic mode.')
-
                 if event == 'media.play' or event == 'media.resume':
                     log_action('Action play_action() invoked (lights off).')
                     decora_api.play_action()  # Turn-off the lights
