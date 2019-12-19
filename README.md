@@ -44,19 +44,16 @@ TBD
 
 ### Known Issues/Solutions
 
-- Issue #1: Lights turn on when movie starts.   
+> Issue #1: Lights turn on when movie starts.   
+> Solution: Make sure pre-roll videos are enabled if trailers are enabled. 
 
-Solution: Make sure pre-roll videos are enabled if trailers are enabled. 
-
-- Issue #2: Lights turn on and off in between trailers.   
- 
-Solution: Be sure you have CONTROL_MODE='Advanced' and pre-roll enabled in Plex.  This could also be a timing issue
+> Issue #2: Lights turn on and off in between trailers.   
+> Solution: Be sure you have CONTROL_MODE='Advanced' and pre-roll enabled in Plex.  This could also be a timing issue
 on how fast trailers load making the app think you stopped/skipped the trailer. If it bothers you, tweak the 
 `PLEX_STOP_ACTION_DELAY` setting to about 2-5.
 
-- Issue #3: Lights turn off then dim right after I play a movie and the trailers start.   
-
-Solution: This is a timing issue because Plex sends a 'media.play' for a movie, followed by a 'media.play' for a 
+> Issue #3: Lights turn off then dim right after I play a movie and the trailers start.   
+> Solution: This is a timing issue because Plex sends a 'media.play' for a movie, followed by a 'media.play' for a 
 trailer. It all depends on how fast Plex can transition from movie play to trailer. If it bothers you, tweak the 
 `PLEX_PLAY_ACTION_DELAY` setting to about 5-8.
 
