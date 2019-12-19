@@ -14,16 +14,16 @@ class DecoraPlexHook(PlexHook):
                                         decora_residence=os.environ.get('DECORA_RESIDENCE'))
 
     def clip_action(self):
-        self.decora_api.run_activity('PLEX_CLIP_ACTIVITY')
+        self.decora_api.run_activity(os.environ.get('PLEX_CLIP_ACTIVITY'))
 
     def end_action(self):
-        self.decora_api.run_activity('PLEX_END_ACTIVITY')
+        self.decora_api.run_activity(os.environ.get('PLEX_END_ACTIVITY'))
 
     def play_action(self):
-        self.decora_api.run_activity('PLEX_PLAY_ACTIVITY')
+        self.decora_api.run_activity(os.environ.get('PLEX_PLAY_ACTIVITY'))
 
     def pause_action(self):
-        self.decora_api.run_activity('PLEX_PAUSE_ACTIVITY')
+        self.decora_api.run_activity(os.environ.get('PLEX_PAUSE_ACTIVITY'))
 
     def stop_action(self):
-        self.decora_api.run_activity('PLEX_STOP_ACTIVITY')
+        self.decora_api.run_activity(os.environ.get('PLEX_STOP_ACTIVITY'))
