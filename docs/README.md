@@ -6,8 +6,8 @@ A webhook application for for [Plex Media Center](http://plex.tv) to automatical
 stop and even media endings.
 
 ## Features
-- Standard detection and actions for play, pause, stop of movies and TV shows.
-- Advanced detection and actions for clips (trailers or pre-roll) and ending (90%) of a movie.
+- Basic mode: detection and actions for play, pause, stop, and ending (90%) of movies and TV shows.
+- Advanced mode: detection of basic features plus actions for clips (trailers or pre-roll).
 - Only implemented support for [Leviton Decora](http://www.leviton.com/en/products/lighting-controls/decora-smart-with-wifi) 
 line of light switches, but feel free to request a pull to contribute code for other dimmer switches by implementing
 a concrete subclass of [AbstractPlexHook.py](AbstractPlexHook.py).
