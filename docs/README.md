@@ -10,10 +10,10 @@ stop and even media endings.
 - Advanced mode: detection of basic features plus actions for clips (trailers or pre-roll).
 - Only implemented support for [Leviton Decora](http://www.leviton.com/en/products/lighting-controls/decora-smart-with-wifi) 
 line of light switches, but feel free to request a pull to contribute code for other dimmer switches by implementing
-a concrete subclass of [AbstractPlexHook.py](AbstractPlexHook.py).
+a concrete subclass of [AbstractPlexHook.py](../plex/AbstractPlexHook.py).
 
 ## Quick Start
-- Define a configuration file (simply make copy of [.env_sample](.env_sample) as a new `.env` file.
+- Define a configuration file (simply make copy of [.env_sample](../.env_sample) as a new `.env` file.
 - Configure the variables in `.env` as appropriate for your use.
 - Follow the installation instructions below.
 - Run the app: `python webhook.py` 
@@ -36,8 +36,8 @@ documentation and code clean-up is in-progress.***
 
 ### Stand-alone Installation
 
-- Define required environment variables by creating a copy of [.env_sample](.env_sample) as a new `.env` file.
-- Install prerequisite packages from [requirements.txt](requirements.txt) using Python 3+:  
+- Define required environment variables by creating a copy of [.env_sample](../.env_sample) as a new `.env` file.
+- Install prerequisite packages from [requirements.txt](../requirements.txt) using Python 3+:  
 `pip install -r requirements.txt`
 - Run the webhook app:  
 `python webhook.py`
