@@ -80,7 +80,7 @@ def webhook():
                 # This is an artificial detection of movie start since Plex doesn't send a new 'media.play' event
                 # when trailers/pre-roll are enabled.
                 if media_type == 'pre-roll' and event == 'media.stop':
-                    log_action('Action play_action (pre-roll done) invoked (lights off).')
+                    log_action('Action play_action (pre-roll done, movie starting...) invoked (lights off).')
                     decora_api.play_action()  # Turn-off the lights
                 # Detect media stop when skipping or when trailers transition automatically.
                 elif event == 'media.stop':

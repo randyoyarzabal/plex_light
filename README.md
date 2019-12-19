@@ -7,7 +7,7 @@ detection) start, stop, and pause in [Plex Media Center](http://plex.tv).
 - Advanced detection and actions for clips (trailers or pre-roll) and ending (90%) of a movie.
 - Only implemented support for [Leviton Decora](http://www.leviton.com/en/products/lighting-controls/decora-smart-with-wifi) 
 line of light switches, but feel free to request a pull to contribute code for other dimmer switches by implementing
-a subclass to [PlexHook.py](plex/PlexHook.py).
+a concrete subclass of [AbstractPlexHook.py](AbstractPlexHook.py).
 
 ## Quick Start
 - Define a configuration file (simply make copy of [.env_sample](.env_sample) as a new `.env` file.
@@ -32,15 +32,22 @@ documentation and code clean-up is in-progress.***
 
 ### Stand-alone Installation
 
-* Define required environment variables by creating a copy of [.env_sample](.env_sample) as a new `.env` file.
-* Install prerequisite packages from [requirements.txt](requirements.txt) using Python 3+:  
+- Define required environment variables by creating a copy of [.env_sample](.env_sample) as a new `.env` file.
+- Install prerequisite packages from [requirements.txt](requirements.txt) using Python 3+:  
 `pip install -r requirements.txt`
-* Run the webhook app:  
+- Run the webhook app:  
 `python webhook.py`
-* Define webhook on your Plex account as: `http://<ip address>:5000/webhook`
+- Define webhook on your Plex account as: `http://<ip address>:5000/webhook`
 
 ### Docker Installation
 TBD
+
+### Known Issues/Solutions
+
+- Issue #1: 
+> Solution:
+- Issue #2:
+> Solution:
 
 ## Credits
 

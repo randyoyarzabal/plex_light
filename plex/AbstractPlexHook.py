@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class PlexHook(ABC):
+class AbstractPlexHook(ABC):
 
     @abstractmethod
     def clip_action(self):

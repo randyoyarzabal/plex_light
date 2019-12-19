@@ -1,17 +1,17 @@
 import os
 
 from leviton import LevitonDecora
-from .PlexHook import PlexHook
+from .AbstractPlexHook import AbstractPlexHook
 
 
-class DecoraPlexHook(PlexHook):
+class DecoraPlexHook(AbstractPlexHook):
 
     def __init__(self):
         super().__init__()
         self.switch = os.environ.get('DECORA_SWITCH')
-        self.decora_api = LevitonDecora(decora_email=os.environ.get('DECORA_USER'),
-                                        decora_pass=os.environ.get('DECORA_PASS'),
-                                        decora_residence=os.environ.get('DECORA_RESIDENCE'))
+        self.decora_api = LevitonDecora(decora_email=os.environ.get('MY_LEVITON_USER'),
+                                        decora_pass=os.environ.get('MY_LEVITON_PASSWORD'),
+                                        decora_residence=os.environ.get('MY_LEVITON_RESIDENCE'))
 
     def clip_action(self):
         self.decora_api.run_activity(os.environ.get('PLEX_CLIP_ACTIVITY'))
