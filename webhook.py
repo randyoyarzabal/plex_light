@@ -98,11 +98,8 @@ def webhook():
         device = payload['Player']['title']
         media_title = payload['Metadata']['title']
 
-        # Use this to calculate last # of minutes of a movie Or past the 'media.scrobble' 90% mark.
+        # Use this to calculate optional last # of minutes of a movie Or past the 'media.scrobble' 90% mark.
         duration = payload['Metadata'].get('duration', '')
-
-        # Last min
-        last_min = 6 * 60
 
         # Determine media type for future handling of various types.
         if media_type == 'clip':
@@ -217,4 +214,4 @@ if __name__ == '__main__':
     #    rule to restrict access only to the Plex Media Player box.
     # For a simple webhook running internally, the Flask dev server is fine.
     print('plex-light_switch {}'.format(VERSION))
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=DEBUG, host='0.0.0.0')
