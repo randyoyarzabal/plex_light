@@ -8,6 +8,7 @@ stop and even media endings.
 ## Features
 - Basic mode: detection and actions for play, pause, stop, and end (90%) of movies and shows.
 - Advanced mode: detection of basic features plus actions for clips (trailers or pre-roll).
+- Automation only runs at specified times of day so lights aren't controlled in the middle of the day.
 - Only implemented support for [Leviton Decora](http://www.leviton.com/en/products/lighting-controls/decora-smart-with-wifi) 
 line of light switches, but feel free to request a pull to contribute code for other dimmer switches by implementing
 a concrete subclass of [AbstractPlexHook.py](../plex/AbstractPlexHook.py).
