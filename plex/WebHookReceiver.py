@@ -123,8 +123,9 @@ class WebHookReceiver:
         self.log_action('Media ({}): {} - {}'.format(media_type, media_title, event))
 
         if self.debug:
-            self.log_action('Duration: ' + str(duration))
-            print(json.dumps(payload, indent=4, sort_keys=True))
+            self.log_action('Duration: {}'.format(timedelta(seconds=duration)))
+            self.log_action('Scrobble Mark: {}'.format(timedelta(seconds=duration * .9)))
+            #print(json.dumps(payload, indent=4, sort_keys=True))
 
         # Only perform actions for a particular player playing on the local network.
         if local and device == plex_player and time_to_run:
