@@ -6,6 +6,7 @@ from flask import Flask, request, abort
 from plex import WebHookReceiver
 
 app = Flask(__name__)
+debug_mode = False
 
 
 @app.route('/webhook', methods=['POST'])
@@ -25,4 +26,4 @@ if __name__ == '__main__':
     # CAUTION: Any IP can access your webhook server!  You may want to add your own OS firewall
     #    rule to restrict access only to the Plex Media Player box.
     # For a simple webhook running internally, the Flask dev server is fine.
-    app.run(debug=DEBUG, host='0.0.0.0')
+    app.run(debug=debug_mode, host='0.0.0.0')
