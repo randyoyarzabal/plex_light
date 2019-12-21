@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
 import json
+import os
 from flask import Flask, request, abort
 from plex import WebHookReceiver
-
-DEBUG = False
 
 app = Flask(__name__)
 
@@ -14,7 +13,9 @@ def webhook():
     if request.method == 'POST':
         plex_dict = request.form.to_dict()
         payload = json.loads(plex_dict['payload'])
-        receiver = WebHookReceiver(DEBUG)
+
+        debug_mode = True if os.environ.get('DEBUG_MODE').upper() == 'TRUE' else False
+        receiver = WebHookReceiver(debug_mode)
         return receiver.process_payload(payload)
     else:
         abort(400)
