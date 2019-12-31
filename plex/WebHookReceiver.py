@@ -93,7 +93,7 @@ class WebHookReceiver:
         Returns:
             None.
         """
-        plex_player = os.environ.get('PLEX_PLAYER')
+        plex_players = [x.strip() for x in os.environ.get('PLEX_PLAYER').split(',')]
         stop_action_delay = int(os.environ.get('PLEX_STOP_ACTION_DELAY'))
         play_action_delay = int(os.environ.get('PLEX_PLAY_ACTION_DELAY'))
         end_action_delay = int(os.environ.get('PLEX_END_ACTION_DELAY'))
@@ -125,10 +125,10 @@ class WebHookReceiver:
         if self.debug:
             self.log_action('Duration: {}'.format(timedelta(seconds=duration)))
             self.log_action('Scrobble Mark: {}'.format(timedelta(seconds=duration * .9)))
-            #print(json.dumps(payload, indent=4, sort_keys=True))
+            # print(json.dumps(payload, indent=4, sort_keys=True))
 
         # Only perform actions for a particular player playing on the local network.
-        if local and device == plex_player and time_to_run:
+        if local and device in plex_players and time_to_run:
             # Reset delay markers, action invoked while previous request is sleeping.
             os.environ['PENDING_END'] = ''
             os.environ['PENDING_STOP'] = ''
@@ -215,7 +215,7 @@ class WebHookReceiver:
                             self.light_switch.end_action()  # Dim the lights
 
         else:
-            if (not time_to_run) and device == plex_player:
+            if (not time_to_run) and device in plex_players:
                 self.log_action('NOT TIME TO RUN: Device: {}, Local: {}, {}'.format(device, local, event))
             else:
                 self.log_action('Post IGNORED: Device: {}, Local: {}, {}'.format(device, local, event))
