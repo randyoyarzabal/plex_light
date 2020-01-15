@@ -5,6 +5,8 @@ import os
 import time
 from plex import DecoraPlexHook
 from datetime import datetime, timedelta
+from util import Utility
+import logging
 
 
 class WebHookReceiver:
@@ -17,6 +19,18 @@ class WebHookReceiver:
         # If you want to control other lights, you'll have to implement/use a different concrete subclass of the
         # PlexHook abstract class and change here.
         self.light_switch = DecoraPlexHook()
+
+        # Log remotely as well if necessary
+        syslog_server = os.environ.get('PLEX_LIGHT_SYSLOG_SERVER')
+        syslog_port = int(os.environ.get('PLEX_LIGHT_SYSLOG_PORT'))
+        syslog_proto = os.environ.get('PLEX_LIGHT_SYSLOG_PROTO')
+
+        self.remote_logger = None
+        if syslog_server != '':
+            self.util = Utility()
+            syslog_level = logging.INFO if debug else logging.DEBUG
+            self.remote_logger = self.util.get_remote_logger('plex_light', syslog_server, syslog_port, syslog_proto,
+                                                             syslog_level)
 
     def __del__(self):
         pass
@@ -66,12 +80,15 @@ class WebHookReceiver:
         timestamp = dt_obj.strftime("%d-%b-%Y (%H:%M:%S)")
         print('{} - {}'.format(timestamp, log_str))
 
+        if self.remote_logger:
+            self.remote_logger.info("ID: {} MSG: {}".format('N/A', log_str))
+
     def scrobble_delay(self, delay, duration):
         """
         Check then delay ending action if necessary.
         Args:
             delay: in seconds.
-            duration: length of media in seocnds.
+            duration: length of media in seconds.
         Returns:
             None.
         """
