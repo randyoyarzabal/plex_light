@@ -13,8 +13,7 @@ import pdb
 from logging.handlers import RotatingFileHandler
 from logging import handlers
 import socket
-
-from Crypto.Cipher import XOR
+from Crypto.Cipher import AES
 
 
 class Utility:
@@ -487,9 +486,9 @@ class Utility:
         :return: Encrypted string
         """
         if not c_key:
-            cipher = XOR.new(Utility.CIPHER_KEY)
+            cipher = AES.new(Utility.CIPHER_KEY)
         else:
-            cipher = XOR.new(c_key)
+            cipher = AES.new(c_key)
         return base64.b64encode(cipher.encrypt(i_str)).decode('utf-8')
 
     @classmethod
@@ -501,9 +500,9 @@ class Utility:
         :return: Decrypted string
         """
         if not c_key:
-            cipher = XOR.new(Utility.CIPHER_KEY)
+            cipher = AES.new(Utility.CIPHER_KEY)
         else:
-            cipher = XOR.new(c_key)
+            cipher = AES.new(c_key)
         return cipher.decrypt(base64.b64decode(e_str)).decode('utf-8')
 
     @classmethod
