@@ -4,19 +4,18 @@ import json
 import os
 from flask import Flask, request, abort
 from plex import WebHookReceiver
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
-debug_mode = False
-
+debug_mode = True if os.environ.get('DEBUG_MODE').upper() == 'TRUE' else False
+receiver = WebHookReceiver(debug_mode)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
     if request.method == 'POST':
         plex_dict = request.form.to_dict()
         payload = json.loads(plex_dict['payload'])
-
-        debug_mode = True if os.environ.get('DEBUG_MODE').upper() == 'TRUE' else False
-        receiver = WebHookReceiver(debug_mode)
         return receiver.process_payload(payload)
     else:
         abort(400)

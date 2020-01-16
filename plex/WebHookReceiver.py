@@ -37,7 +37,9 @@ class WebHookReceiver:
                                                              syslog_level)
 
     def __del__(self):
-        pass
+        if self.remote_logger:
+            for handler in self.remote_logger.handlers:
+                handler.close()
 
     def is_time_to_run(self, start_time, end_time):
         """

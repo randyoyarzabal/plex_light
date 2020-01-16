@@ -579,6 +579,7 @@ class Utility:
 
             self.remote_logger = logging.getLogger(log_name)
             self.remote_logger.setLevel(level)
+            self.remote_logger.propagate = False
 
             if syslog_proto.upper() == Utility.LOG_UDP:
                 log_protocol = socket.SOCK_DGRAM
