@@ -7,6 +7,7 @@ from plex import DecoraPlexHook
 from datetime import datetime, timedelta
 from util import Utility
 import logging
+import shortuuid
 
 
 class WebHookReceiver:
@@ -25,8 +26,11 @@ class WebHookReceiver:
         syslog_port = int(os.environ.get('PLEX_LIGHT_SYSLOG_PORT'))
         syslog_proto = os.environ.get('PLEX_LIGHT_SYSLOG_PROTO')
 
+
         self.remote_logger = None
+        self.log_id = None
         if syslog_server != '':
+            self.log_id = shortuuid.ShortUUID().random(length=8)
             self.util = Utility()
             syslog_level = logging.INFO if debug else logging.DEBUG
             self.remote_logger = self.util.get_remote_logger('plex_light', syslog_server, syslog_port, syslog_proto,
@@ -81,7 +85,7 @@ class WebHookReceiver:
         print('{} - {}'.format(timestamp, log_str))
 
         if self.remote_logger:
-            self.remote_logger.info("ID: {} MSG: {}".format('N/A', log_str))
+            self.remote_logger.info("ID:{} MSG:{}".format(self.log_id, log_str))
 
     def scrobble_delay(self, delay, duration):
         """
