@@ -30,7 +30,6 @@ class WebHookReceiver:
         self.remote_logger = None
         self.log_id = None
         if syslog_server != '':
-            self.log_id = shortuuid.ShortUUID().random(length=8)
             self.util = Utility()
             syslog_level = logging.INFO if debug else logging.DEBUG
             self.remote_logger = self.util.get_remote_logger('plex_light', syslog_server, syslog_port, syslog_proto,
@@ -116,6 +115,7 @@ class WebHookReceiver:
         Returns:
             None.
         """
+        self.log_id = shortuuid.ShortUUID().random(length=8)
         plex_players = [x.strip() for x in os.environ.get('PLEX_PLAYER').split(',')]
         stop_action_delay = int(os.environ.get('PLEX_STOP_ACTION_DELAY'))
         play_action_delay = int(os.environ.get('PLEX_PLAY_ACTION_DELAY'))
