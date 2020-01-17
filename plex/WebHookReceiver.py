@@ -75,16 +75,16 @@ class WebHookReceiver:
 
     def get_remote_logger(self, log_name, syslog_host, syslog_port=514, syslog_proto=LOG_UDP, level=logging.INFO):
         """
-
+        Instantiates a syslog logging object.
         Args:
-            log_name:
-            syslog_host:
-            syslog_port:
-            syslog_proto:
-            level:
+            log_name: Tag/log process name.
+            syslog_host: Host IP of syslog server
+            syslog_port: Server port.
+            syslog_proto: 'udp' or 'tcp'
+            level: Logging level as defined in 'logging' library.
 
         Returns:
-
+            Logger object.
         """
         if not self.remote_logger:
             if self.debug:
