@@ -16,7 +16,7 @@ class WebHookReceiver:
     LOG_TCP = 'TCP'
 
     def __init__(self, debug):
-        self.version = '0.4'
+        self.version = '0.5'
         self.debug = debug
 
         # This object is an instance of a Leviton Decora dimmer/switch control implementation of the PlexHook class.
