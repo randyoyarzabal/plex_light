@@ -10,7 +10,6 @@ itsdangerous==1.1.0
 Jinja2==2.10.3
 MarkupSafe==1.1.1
 more-itertools==8.1.0
-pycryptodome==3.9.4
 python-dotenv==0.10.3
 requests==2.22.0
 shortuuid==0.5.0

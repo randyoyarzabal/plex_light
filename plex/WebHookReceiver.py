@@ -5,12 +5,15 @@ import os
 import time
 from plex import DecoraPlexHook
 from datetime import datetime, timedelta
-from util import Utility
 import logging
 import shortuuid
+from logging import handlers
+import socket
 
 
 class WebHookReceiver:
+    LOG_UDP = 'UDP'
+    LOG_TCP = 'TCP'
 
     def __init__(self, debug):
         self.version = '0.4'
@@ -26,14 +29,12 @@ class WebHookReceiver:
         syslog_port = int(os.environ.get('PLEX_LIGHT_SYSLOG_PORT'))
         syslog_proto = os.environ.get('PLEX_LIGHT_SYSLOG_PROTO')
 
-
         self.remote_logger = None
         self.log_id = None
         if syslog_server != '':
-            self.util = Utility()
             syslog_level = logging.INFO if debug else logging.DEBUG
-            self.remote_logger = self.util.get_remote_logger('plex_light', syslog_server, syslog_port, syslog_proto,
-                                                             syslog_level)
+            self.remote_logger = self.get_remote_logger('plex_light', syslog_server, syslog_port, syslog_proto,
+                                                        syslog_level)
 
     def __del__(self):
         if self.remote_logger:
@@ -71,6 +72,38 @@ class WebHookReceiver:
             return start_dt_obj <= now_dt_obj <= end_dt_obj
         else:  # past midnight e.g., 17:00-09:00 (5pm - 9am)
             return start_dt_obj <= now_dt_obj or now_dt_obj <= end_dt_obj
+
+    def get_remote_logger(self, log_name, syslog_host, syslog_port=514, syslog_proto=LOG_UDP, level=logging.INFO):
+        """
+
+        Args:
+            log_name:
+            syslog_host:
+            syslog_port:
+            syslog_proto:
+            level:
+
+        Returns:
+
+        """
+        if not self.remote_logger:
+            if self.debug:
+                level = logging.DEBUG
+
+            self.remote_logger = logging.getLogger(log_name)
+            self.remote_logger.setLevel(level)
+            self.remote_logger.propagate = False
+
+            if syslog_proto.upper() == self.LOG_UDP:
+                log_protocol = socket.SOCK_DGRAM
+            else:
+                log_protocol = socket.SOCK_STREAM
+
+            handler = handlers.SysLogHandler((syslog_host, syslog_port), socktype=log_protocol)
+            handler.formatter = logging.Formatter("%(name)s: LVL:%(levelname)s FUNC:%(funcName)s() %(message)s")
+            self.remote_logger.addHandler(handler)
+
+        return self.remote_logger
 
     def log_action(self, log_str):
         """
