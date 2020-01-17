@@ -17,7 +17,7 @@ a concrete subclass of [AbstractPlexHook.py](../plex/AbstractPlexHook.py).
 - Define a configuration file (simply make copy of [.env_sample](../.env_sample) as a new `.env` file.
 - Configure the variables in `.env` as appropriate for your use.
 - Follow the installation instructions below.
-- Run the app: `python webhook.py` 
+- Run the app: `plex_light.py` 
 - Define the full URL as webhook in the Plex configuration. Enjoy!
 
 ***Caution:*** if you intend this app to control lights based on trailer/pre-roll events, you need to make sure that 
@@ -41,7 +41,7 @@ documentation and code clean-up is in-progress.***
 - Install prerequisite packages from [requirements.txt](../requirements.txt) using Python 3+:  
 `pip install -r requirements.txt`
 - Run the webhook app:  
-`python webhook.py`
+`plex_light.py`
 - Define webhook on your Plex account as: `http://<ip address>:5000/webhook`
 
 ### Docker Installation

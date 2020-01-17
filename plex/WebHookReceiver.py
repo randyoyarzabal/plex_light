@@ -5,12 +5,18 @@ import os
 import time
 from plex import DecoraPlexHook
 from datetime import datetime, timedelta
+import logging
+import shortuuid
+from logging import handlers
+import socket
 
 
 class WebHookReceiver:
+    LOG_UDP = 'UDP'
+    LOG_TCP = 'TCP'
 
     def __init__(self, debug):
-        self.version = '0.4'
+        self.version = '0.5'
         self.debug = debug
 
         # This object is an instance of a Leviton Decora dimmer/switch control implementation of the PlexHook class.
@@ -18,8 +24,22 @@ class WebHookReceiver:
         # PlexHook abstract class and change here.
         self.light_switch = DecoraPlexHook()
 
+        # Log remotely as well if necessary
+        syslog_server = os.environ.get('PLEX_LIGHT_SYSLOG_SERVER')
+        syslog_port = int(os.environ.get('PLEX_LIGHT_SYSLOG_PORT'))
+        syslog_proto = os.environ.get('PLEX_LIGHT_SYSLOG_PROTO')
+
+        self.remote_logger = None
+        self.log_id = None
+        if syslog_server != '':
+            syslog_level = logging.INFO if debug else logging.DEBUG
+            self.remote_logger = self.get_remote_logger('plex_light', syslog_server, syslog_port, syslog_proto,
+                                                        syslog_level)
+
     def __del__(self):
-        pass
+        if self.remote_logger:
+            for handler in self.remote_logger.handlers:
+                handler.close()
 
     def is_time_to_run(self, start_time, end_time):
         """
@@ -53,6 +73,38 @@ class WebHookReceiver:
         else:  # past midnight e.g., 17:00-09:00 (5pm - 9am)
             return start_dt_obj <= now_dt_obj or now_dt_obj <= end_dt_obj
 
+    def get_remote_logger(self, log_name, syslog_host, syslog_port=514, syslog_proto=LOG_UDP, level=logging.INFO):
+        """
+        Instantiates a syslog logging object.
+        Args:
+            log_name: Tag/log process name.
+            syslog_host: Host IP of syslog server
+            syslog_port: Server port.
+            syslog_proto: 'udp' or 'tcp'
+            level: Logging level as defined in 'logging' library.
+
+        Returns:
+            Logger object.
+        """
+        if not self.remote_logger:
+            if self.debug:
+                level = logging.DEBUG
+
+            self.remote_logger = logging.getLogger(log_name)
+            self.remote_logger.setLevel(level)
+            self.remote_logger.propagate = False
+
+            if syslog_proto.upper() == self.LOG_UDP:
+                log_protocol = socket.SOCK_DGRAM
+            else:
+                log_protocol = socket.SOCK_STREAM
+
+            handler = handlers.SysLogHandler((syslog_host, syslog_port), socktype=log_protocol)
+            handler.formatter = logging.Formatter("%(name)s: LVL:%(levelname)s FUNC:%(funcName)s() %(message)s")
+            self.remote_logger.addHandler(handler)
+
+        return self.remote_logger
+
     def log_action(self, log_str):
         """
         Wrapper logging function so we can log anywhere in the future.
@@ -66,12 +118,15 @@ class WebHookReceiver:
         timestamp = dt_obj.strftime("%d-%b-%Y (%H:%M:%S)")
         print('{} - {}'.format(timestamp, log_str))
 
+        if self.remote_logger:
+            self.remote_logger.info("ID:{} MSG:{}".format(self.log_id, log_str))
+
     def scrobble_delay(self, delay, duration):
         """
         Check then delay ending action if necessary.
         Args:
             delay: in seconds.
-            duration: length of media in seocnds.
+            duration: length of media in seconds.
         Returns:
             None.
         """
@@ -93,6 +148,7 @@ class WebHookReceiver:
         Returns:
             None.
         """
+        self.log_id = shortuuid.ShortUUID().random(length=8)
         plex_players = [x.strip() for x in os.environ.get('PLEX_PLAYER').split(',')]
         stop_action_delay = int(os.environ.get('PLEX_STOP_ACTION_DELAY'))
         play_action_delay = int(os.environ.get('PLEX_PLAY_ACTION_DELAY'))
