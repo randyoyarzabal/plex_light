@@ -1,4 +1,4 @@
-[![GitHub release](https://img.shields.io/badge/Download-Release%20v0.3-lightgrey.svg?style=social)](https://github.com/randyoyarzabal/plex_light/releases/latest) [![GitHub commits (since latest release)](https://img.shields.io/github/commits-since/randyoyarzabal/plex_light/latest.svg?style=social)](https://github.com/randyoyarzabal/plex_light/commits/master)
+[![GitHub release](https://img.shields.io/badge/Download-Release%20v0.5-lightgrey.svg?style=social)](https://github.com/randyoyarzabal/plex_light/releases/latest) [![GitHub commits (since latest release)](https://img.shields.io/github/commits-since/randyoyarzabal/plex_light/latest.svg?style=social)](https://github.com/randyoyarzabal/plex_light/commits/master)
 
 # Automated Plex Lighting Control
 A webhook application for for [Plex Media Center](http://plex.tv) to automatically control home theater lighting 
