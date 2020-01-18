@@ -4,12 +4,12 @@ import json
 import os
 from flask import Flask, request, abort
 from plex import WebHookReceiver
+from plex.Utiliy import *
 from dotenv import load_dotenv
 
 load_dotenv()
 
 app = Flask(__name__)
-debug_mode = True if os.environ.get('DEBUG_MODE').upper() == 'TRUE' else False
 receiver = WebHookReceiver(debug_mode)
 
 
