@@ -31,7 +31,7 @@ if syslog_server != '':
         log_protocol = socket.SOCK_STREAM
 
     handler = handlers.SysLogHandler((syslog_server, syslog_port), socktype=log_protocol)
-    handler.formatter = logging.Formatter("%(name)s: LVL:%(levelname)s FUNC:%(funcName)s() %(message)s")
+    handler.formatter = logging.Formatter("%(name)s LVL:%(levelname)s FUNC:%(funcName)s() %(message)s")
     remote_logger.addHandler(handler)
 
 
