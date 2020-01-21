@@ -31,7 +31,8 @@ if syslog_server != '':
         log_protocol = socket.SOCK_STREAM
 
     handler = handlers.SysLogHandler((syslog_server, syslog_port), socktype=log_protocol)
-    handler.formatter = logging.Formatter("%(name)s LVL:%(levelname)s FUNC:%(funcName)s() %(message)s")
+    # Note the ":" after the name.  This is important for rsyslog to parse properly.
+    handler.formatter = logging.Formatter("%(name)s: LVL:%(levelname)s FUNC:%(funcName)s() %(message)s")
     remote_logger.addHandler(handler)
 
 
