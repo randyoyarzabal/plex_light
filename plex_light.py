@@ -6,7 +6,8 @@ from flask import Flask, request, abort
 from plex import WebHookReceiver
 from dotenv import load_dotenv
 
-load_dotenv()
+# Make sure a config file ".env" exists in the config dir.
+load_dotenv("config/.env")
 
 app = Flask(__name__)
 debug_mode = True if os.environ.get('DEBUG_MODE').upper() == 'TRUE' else False
