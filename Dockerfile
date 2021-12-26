@@ -12,8 +12,13 @@
 # Using the Container:
 #
 # Run container in background once:
-#   - $> sudo docker run --rm -d -t -v <config dir path>:/plex_light/config -p 5000:5000 --name=plight randyoyarzabal/plex_light 
-
+#   - $> sudo docker run --rm -d -t \
+#           -v <config dir path>:/plex_light/config \
+#           -p 5000:5000 \
+#           --name=plex_light \
+#           --restart=unless-stopped
+#           randyoyarzabal/plex_light
+# 
 # This is a multi-stage build file that significantly minimizes the container image size.
 
 # Stage 1
