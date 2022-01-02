@@ -1,4 +1,4 @@
-# This file is only needed if you need to create your own Reach container image.
+# This file is only needed if you need to create your own Plex Light container image.
 # A pre-built image is available in Docker.io: https://hub.docker.com/repository/docker/randyoyarzabal/plex_light
 # via the command: $> docker pull randyoyarzabal/plex_light:latest
 #
