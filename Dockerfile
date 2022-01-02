@@ -14,6 +14,7 @@
 # Run container in background once:
 #   - $> sudo docker run --rm -d -t \
 #           -v <config dir path>:/plex_light/config \
+#           -e PL_CONFIG_FILE='/plex_light/config/.env'
 #           -p 5000:5000 \
 #           --name=plex_light \
 #           --restart=unless-stopped

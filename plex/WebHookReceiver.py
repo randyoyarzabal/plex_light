@@ -2,25 +2,24 @@
 
 import os
 import time
-from plex import DecoraPlexHook, Utiliy
-from plex.Utiliy import *
+from plex import DecoraPlexHook
 from datetime import datetime, timedelta
-import shortuuid
 
 
 class WebHookReceiver:
-    def __init__(self, debug):
-        self.version = '0.5'
-        self.debug = debug
-        self.log_id = None
+    def __init__(self, logger):
+        self.logger = logger
+        self.light_switch = None
 
+    def __del__(self):
+        self.logger.close_logger()
+
+    def get_switch(self):
         # This object is an instance of a Leviton Decora dimmer/switch control implementation of the PlexHook class.
         # If you want to control other lights, you'll have to implement/use a different concrete subclass of the
         # PlexHook abstract class and change here.
-        self.light_switch = DecoraPlexHook()
-
-    def __del__(self):
-        pass
+        self.light_switch = DecoraPlexHook(self.logger)
+        self.light_switch.login()
 
     def is_time_to_run(self, start_time, end_time):
         """
@@ -43,11 +42,11 @@ class WebHookReceiver:
         start_dt_obj = datetime.strptime(now_dt_obj.strftime("%Y%m%d") + ' ' + start_time, '%Y%m%d %H:%M')
         end_dt_obj = datetime.strptime(now_dt_obj.strftime("%Y%m%d") + ' ' + end_time, '%Y%m%d %H:%M')
 
-        if self.debug:
-            log_action(self.log_id, 'Current time: {:%H:%M:%S} - (Run Range: {:%H:%M} - {:%H:%M})'.format(now_dt_obj,
-                                                                                                          start_dt_obj,
-                                                                                                          end_dt_obj
-                                                                                                          ))
+        if self.logger.debug:
+            self.logger.write('Current time: {:%H:%M:%S} - (Run Range: {:%H:%M} - {:%H:%M})'.format(now_dt_obj,
+                                                                                                    start_dt_obj,
+                                                                                                    end_dt_obj
+                                                                                                    ))
         if start_dt_obj <= end_dt_obj:
             return start_dt_obj <= now_dt_obj <= end_dt_obj
         else:  # past midnight e.g., 17:00-09:00 (5pm - 9am)
@@ -65,23 +64,22 @@ class WebHookReceiver:
         if delay > 0:
             scrobble_mark = duration * .9
             play_time_left = duration - scrobble_mark
-            # Only invoke delay if delay requested is < than the left over duration of the media.
+            # Only invoke delay if delay requested is < than the leftover duration of the media.
             if delay < play_time_left:
-                log_action(self.log_id, 'End delay activated for {} secs.'.format(delay))
+                self.logger.write('End delay activated for {} secs.'.format(delay))
                 time.sleep(delay)
             else:
-                log_action(self.log_id, 'Content is too short to impose ending delay.')
+                self.logger.write('Content is too short to impose ending delay.')
 
     def process_payload(self, payload):
         """
-        The "brains" of the the operation. Act on events received in Plex payload.
+        The "brains" of the operation. Act on events received in Plex payload.
         Args:
             payload: payload of Plex server post.
         Returns:
             None.
         """
-        self.log_id = shortuuid.ShortUUID().random(length=8)
-        Utiliy.log_id = self.log_id
+        self.logger.get_new_id()
 
         plex_players = [x.strip() for x in os.environ.get('PLEX_PLAYER').split(',')]
         stop_action_delay = int(os.environ.get('PLEX_STOP_ACTION_DELAY'))
@@ -103,22 +101,31 @@ class WebHookReceiver:
 
         # Determine media type for future handling of various types.
         if media_type == 'clip':
-            if 'preroll' in payload['Metadata'].get('guid', ''):
+            if 'pre-roll' in payload['Metadata'].get('guid', ''):
                 media_type = 'pre-roll'
             elif 'trailer' in payload['Metadata'].get('subtype', ''):
                 media_type = 'trailer'
             else:
                 media_type = 'unknown'
 
-        log_action(self.log_id, 'Media ({}): {} - {}'.format(media_type, media_title, event))
+        self.logger.write('Media ({}): {} - {}'.format(media_type, media_title, event))
 
-        if self.debug:
-            log_action(self.log_id, 'Duration: {}'.format(timedelta(seconds=duration)))
-            log_action(self.log_id, 'Scrobble Mark: {}'.format(timedelta(seconds=duration * .9)))
+        if self.logger.debug:
+            self.logger.write('Duration: {}'.format(timedelta(seconds=duration)))
+            self.logger.write('Scrobble Mark: {}'.format(timedelta(seconds=duration * .9)))
             # print(json.dumps(payload, indent=4, sort_keys=True))
 
         # Only perform actions for a particular player playing on the local network.
-        if local and device in plex_players and time_to_run:
+        allow_remote = True if os.environ.get('ALLOW_REMOTE').upper() == 'TRUE' else False
+        if allow_remote or local:
+            ok_to_run = True
+        else:
+            ok_to_run = False
+
+        if ok_to_run and device in plex_players and time_to_run:
+            self.logger.write('OK to RUN: Device: {}, Local: {}, Allow Remote: {}, {}'.format(device, local,
+                                                                                              allow_remote,
+                                                                                              event))
             # Reset delay markers, action invoked while previous request is sleeping.
             os.environ['PENDING_END'] = ''
             os.environ['PENDING_STOP'] = ''
@@ -127,11 +134,11 @@ class WebHookReceiver:
             # Basic Plex event detection (no trailers/pre-roll)
             if control_mode == 'BASIC':
                 if event == 'media.play' or event == 'media.resume':
-                    log_action(self.log_id, 'Action play_action() invoked (lights off).')
+                    self.logger.write('Action play_action() invoked (lights off).')
                     self.light_switch.play_action()  # Turn-off the lights
 
                 if event == 'media.pause':
-                    log_action(self.log_id, 'Action pause_action() invoked (dim lights).')
+                    self.logger.write('Action pause_action() invoked (dim lights).')
                     self.light_switch.pause_action()  # Dim the lights
 
                 # This event is for when 90% of the movie is reached.
@@ -145,11 +152,11 @@ class WebHookReceiver:
                         # Check if we need to continue (i.e. another action happened while asleep)
                         if os.environ.get('PENDING_END', '') == 'True':
                             os.environ['PENDING_END'] = ''
-                            log_action(self.log_id, 'Action end_action() invoked (dim lights).')
+                            self.logger.write('Action end_action() invoked (dim lights).')
                             self.light_switch.end_action()  # Dim the lights
 
                 if event == 'media.stop':
-                    log_action(self.log_id, 'Action stop_action() invoked (lights on).')
+                    self.logger.write('Action stop_action() invoked (lights on).')
                     self.light_switch.stop_action()  # Turn-on the lights
 
             # Advanced event detection (trailers AND pre-roll enabled)
@@ -157,39 +164,38 @@ class WebHookReceiver:
                 # This is an artificial detection of movie start since Plex doesn't send a new 'media.play' event
                 # when trailers/pre-roll are enabled.
                 if media_type == 'pre-roll' and event == 'media.stop':
-                    log_action(self.log_id,
-                               'Action play_action (pre-roll done, movie starting...) invoked (lights off).')
+                    self.logger.write('Action play_action (pre-roll done, movie starting...) invoked (lights off).')
                     self.light_switch.play_action()  # Turn-off the lights
                 # Detect media stop when skipping or when trailers transition automatically.
                 elif event == 'media.stop':
                     # This delay is to prevent stop_action() from invoking in between trailers/pre-roll
                     os.environ['PENDING_STOP'] = 'True'
-                    log_action(self.log_id, 'Stop delay activated for {} secs.'.format(stop_action_delay))
+                    self.logger.write('Stop delay activated for {} secs.'.format(stop_action_delay))
                     time.sleep(stop_action_delay)
                     # Check if we need to continue (i.e. another action happened while asleep)
                     if os.environ.get('PENDING_STOP', '') == 'True':
                         os.environ['PENDING_STOP'] = ''
-                        log_action(self.log_id, 'Action stop_action() invoked (lights on).')
+                        self.logger.write('Action stop_action() invoked (lights on).')
                         self.light_switch.stop_action()  # Turn-on the lights
                 # If playing trailers/pre-roll only invoke one action clip_action()
                 elif media_type in ('trailer', 'pre-roll'):
                     if event == 'media.play' or event == 'media.resume' or event == 'media.pause':
-                        log_action(self.log_id, 'Action clip_action() invoked (dim lights).')
+                        self.logger.write('Action clip_action() invoked (dim lights).')
                         self.light_switch.clip_action()  # Dim the lights
                 elif media_type in ('movie', 'episode'):
                     if event == 'media.play' or event == 'media.resume':
                         # This delay prevents the play_action() if followed by trailers/pre-roll
                         os.environ['PENDING_PLAY'] = 'True'
-                        log_action(self.log_id, 'Play delay activated for {} secs.'.format(play_action_delay))
+                        self.logger.write('Play delay activated for {} secs.'.format(play_action_delay))
                         time.sleep(play_action_delay)
                         # Check if we need to continue (i.e. another action happened while asleep)
                         if os.environ.get('PENDING_PLAY', '') == 'True':
                             os.environ['PENDING_PLAY'] = ''
-                            log_action(self.log_id, 'Action play_action() invoked (lights off).')
+                            self.logger.write('Action play_action() invoked (lights off).')
                             self.light_switch.play_action()  # Turn-off the lights
 
                     if event == 'media.pause':
-                        log_action(self.log_id, 'Action pause_action() invoked (dim lights).')
+                        self.logger.write('Action pause_action() invoked (dim lights).')
                         self.light_switch.pause_action()  # Dim the lights
 
                     # This event is for when 90% of the movie is reached.
@@ -202,12 +208,16 @@ class WebHookReceiver:
                         # Check if we need to continue (i.e. another action happened while asleep)
                         if os.environ.get('PENDING_END', '') == 'True':
                             os.environ['PENDING_END'] = ''
-                            log_action(self.log_id, 'Action end_action() invoked (dim lights).')
+                            self.logger.write('Action end_action() invoked (dim lights).')
                             self.light_switch.end_action()  # Dim the lights
 
         else:
             if (not time_to_run) and device in plex_players:
-                log_action(self.log_id, 'NOT TIME TO RUN: Device: {}, Local: {}, {}'.format(device, local, event))
+                self.logger.write('NOT TIME TO RUN: Device: {}, Local: {}, {}'.format(device, local, event))
+            elif not ok_to_run:
+                self.logger.write('NOT OK to RUN: Device: {}, Local: {}, Allow Remote: {}, {}'.format(device, local,
+                                                                                                      allow_remote,
+                                                                                                      event))
             else:
-                log_action(self.log_id, 'Post IGNORED: Device: {}, Local: {}, {}'.format(device, local, event))
-        return '', 200
+                self.logger.write('Post IGNORED: Device: {}, Local: {}, {}'.format(device, local, event))
+        return 'Processed.', 200

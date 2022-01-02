@@ -11,7 +11,7 @@ class LevitonDecora:
             self.session = DecoraWiFiSession()
             self.session.login(kwargs.get('decora_email'), kwargs.get('decora_pass'))
         except Exception:
-            raise RuntimeError("Unable to login to MyLeviton Cloud.  Check user/pass.")
+            raise RuntimeError("Unable to login to MyLeviton Cloud. Check user/pass.")
 
     def get_switch(self, switch_name):
         for perm in self.session.user.get_residential_permissions():
