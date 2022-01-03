@@ -54,7 +54,7 @@ if __name__ == '__main__':
     # CAUTION: Any IP can access your webhook server!  You may want to add your own OS firewall
     #    rule to restrict access only to the Plex Media Player box.
     # For a simple webhook running internally, the Flask dev server is fine.
-    version = '1.1'
+    version = '1.0'
     logger.write("Starting plex_light v.{}".format(version))
     logger.write("Ready to process Plex events.".format(config_file))
     app.run(debug=debug_mode, host='0.0.0.0')
