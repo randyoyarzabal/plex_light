@@ -4,7 +4,7 @@ node {
             checkout scm
       }
       stage('Build image') {
-            app = docker.build("randyoyarzabal/plex_light")
+            app = docker.build("randyoyarzabal/plex_light:develop")
       }
       stage('Test image') {
             app.inside {
