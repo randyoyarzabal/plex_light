@@ -50,4 +50,4 @@ WORKDIR $PL_PATH
 COPY --from=compile-image /opt/venv /opt/venv
 COPY . $PL_PATH
 
-CMD ["plex_light.py"]
+CMD ["python3", "-u", "plex_light.py"]
